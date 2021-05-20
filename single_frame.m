@@ -1,8 +1,8 @@
 %% generate spectrum
-corrected = (im4(ak2-9:ak2+10,:)-1*im4(ak3-9:ak3+10,:))./1;
+corrected = (spec(ak2-9:ak2+10,:)-1*spec(ak3-9:ak3+10,:))./1;
 corrected = (sum(corrected))';
 
-raw = im4(ak2-9:ak2+10,:);
+raw = spec(ak2-9:ak2+10,:);
 raw = sum(raw);
 
 [~,xcc] = find(img_z == max(max(img_z(:,100:end))));

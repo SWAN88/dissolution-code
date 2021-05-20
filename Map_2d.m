@@ -1,6 +1,5 @@
 % draw 2D map to identify each particle
-
-figure;imagesc(im2);
+figure;imagesc(pos);
 
 for(count = 1:numel(ak11))
     hold on;

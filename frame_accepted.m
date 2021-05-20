@@ -1,5 +1,3 @@
-
-
     count = count + 1;
     ak11(count) = ak1;
     %ak31 = ak3;
