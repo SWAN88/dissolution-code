@@ -10,7 +10,7 @@ Place2save = fullfile(Place2Save, Power);
 %% Save param_stack  %%
 
 % need to be chaged P*
-params_stack_P3 = params_stack;
+params_stack_P2 = params_stack;
 % clear('params_stack');
 
 Filename = string(Potential) + 'V';

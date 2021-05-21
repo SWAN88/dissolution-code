@@ -2,7 +2,7 @@ function W = awt1d(I, varargin)
 % W = AWT(I) computes the A Trou Wavelet Transform of image I.
 % A description of the algorithm can be found in:
 % J.-L. Starck, F. Murtagh, A. Bijaoui, "Image Processing and Data
-% Analysis: The Multiscale Approach", Cambridge Press, Cambridge, 2000.
+% Analysis: The Multiscale Approach", Cambridge Press, Cambridge, 2000. p24
 %
 % W = AWT(I, nBands) computes the A Trou Wavelet decomposition of the
 % image I up to nBands scale (inclusive). The default value is nBands =

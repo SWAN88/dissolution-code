@@ -15,7 +15,7 @@ spectra_stack = NaN(2048,3,endframe);
 for frame_number = startframe:endframe
     spec=imread(filename2, frame_number);
     
-    params = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plot_data.Value, frame_number);
+    params = stackfit(ak2, ak3, spec, img_z, plot_data.Value, frame_number);
     params_stack(frame_number, :) = params;
     spectra_stack(:, :, frame_number) = spectrum;
     
@@ -32,18 +32,19 @@ for frame_number = startframe:endframe
             saveas(gcf,[filepath2, 'spectra\particle_', num2str(1), '_frame_', num2str(frame_number), '.png'])
         end
     end
+    specstack{frame_number} = corrected;
 end
 
-function params = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plotdata, frame_number)
+function params = stackfit(ak2, ak3, spec, img_z, plotdata, frame_number)
 % generate spectrum
-corrected = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
+corrected = (spec(ak2-9:ak2+10,:)-1*spec(ak3-9:ak3+10,:))./1;
 corrected = (sum(corrected))';
 
-raw = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:);
+raw = spec(ak2-9:ak2+10,:);
 raw = sum(raw);
 
-[~,part_x_pixel] = find(img_z == max(max(img_z(:,100:end))));
-part_x_pixel = part_x_pixel(1);
+[~,xcc] = find(img_z == max(max(img_z(:,100:end))));
+xcc = xcc(1);
 pixels = 1:2048;
 
 % enter params
@@ -53,7 +54,7 @@ pixels = 1:2048;
 intercept = 0.24;
 slope = 160.8;
 
-wav = ((pixels+part_x_pixel)*intercept+slope)';
+wav = ((pixels+xcc)*intercept+slope)';
 ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
 
 %% Fit
@@ -74,10 +75,9 @@ fo.Lower = [0.1*ymax, 0.1, 1, -ymax];
 fo.Upper = [2*ymax, 2, 3, ymax];
 fo.Robust = 'LAR';
 fo.MaxIter = 1e3;
-fo.Display = 'Off';
 
 % to exclude fitting points below lambda
-lambda = 650;
+lambda = 600;
 fo.Exclude = ev > 1240 ./ lambda;
 
 c = fit(ev, corrected, ft, fo); %fit without filter

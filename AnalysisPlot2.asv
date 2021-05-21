@@ -1,11 +1,11 @@
 %% Plotting LSPR position as a function of time %%
-%clear
+clear
 
 %Parameters to be changed
 Total_particle = 3;
 Frames = 480;
-Potential = 0.27;
-Power = 'High';
+Potential = 0.25;
+Power = 'High1';
 Place2SAVE = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\210520';
 Place2Save = fullfile(Place2SAVE, Power); 
 Place2save = fullfile(Place2Save, string(Potential) + 'V'); 

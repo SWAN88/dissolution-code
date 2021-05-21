@@ -18,10 +18,10 @@ spec = imread(filename2);
 
 W = awt1d(spec);  %W = AWT(I) computes the A Trou Wavelet Transform of image I. Code in awt1d.m.
 a_trous_transformed_spec = sum(W(:,:,7:end),3);
-part_num = 0; % for frame_accepted.m & Map_2d.m
+count = 0; % for frame_accepted.m & Map_2d.m
 
 % GUI left top
-fh1 = subplot(2,2,1);imagesc(pos); % set subplot(2,2,1)equals to fh1 for frame_accepted.m
+fh1 = subplot(2,2,1);imagesc(pos); % put subplot(2,2,1)
 % GUI right top
 subplot(2,2,2); 
 imagesc(a_trous_transformed_spec);

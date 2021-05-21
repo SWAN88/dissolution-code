@@ -1,13 +1,11 @@
-    count = count + 1;
-    ak11(count) = ak1;
-    %ak31 = ak3;
-    xcc_rec(count) = xcc;
+    part_num = part_num + 1;
+    part_y_pixel_list(part_num) = part_y_pixel;
+    part_x_pixel_list(part_num) = part_x_pixel;
     
-    %figure(fh1);
     subplot(fh1)
     hold on;
-    text(xcc_rec(count),ak11(count),num2str(count),'color','w');
+    text(part_x_pixel_list(part_num),part_y_pixel_list(part_num),num2str(part_num),'color','w');
     hold off;
     
-    coordinates(count,:) = [xcc, ak1, ak3];
+    coordinates(part_num,:) = [part_x_pixel, part_y_pixel, bg_y_pixel];
 
