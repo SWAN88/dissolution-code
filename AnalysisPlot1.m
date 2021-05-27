@@ -1,31 +1,43 @@
 %% Plotting LSPR position as a function of time %%
 
-Particle_number = 3;
-Potential = 0.27;
-Power = 'High';
-Frames = 480;
-Place2Save = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\210520';
-Place2save = fullfile(Place2Save, Power); 
+Particle_number = part_num;
+date = get(findobj(gcf,'Tag','date'),'String');
+Potential = str2double(get(findobj(gcf,'Tag','potential'),'String'));
+Power = get(findobj(gcf,'Tag','power'),'String');
+Frames = endframe;
+
+%path
+Origin = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\';
+
+if ~exist(Origin + string(date), 'dir')
+   mkdir(Origin + string(date)); 
+   cd(fullfile(Origin + string(date)))
+   if ~exist(Origin + string(date) + string(Potential) + 'V', 'dir')
+      mkdir(Origin + string(date) + string(Potential) + 'V'); 
+   end
+end
+
+% How can we create potential folder in date folder??
 
 %% Save param_stack  %%
 
 % need to be chaged P*
-params_stack_P3 = params_stack;
+params_stack_P1 = params_stack;
 % clear('params_stack');
 
-Filename = string(Potential) + 'V';
-newfolder = fullfile(Place2save, Filename); 
+% Filename = string(Potential) + 'V';
+% newfolder = fullfile(Place2save, Filename); 
+% 
+%         %status = mkdir(newfolder); 
+%    % if status
+%        % mkdir(fullfile(newfolder, Filename)); 
+%     %end 
+%     
+%     if ~exist((Place2save + Filename), 'dir') %check if dir doesnt exist
+%         mkdir(fullfile(newfolder, Filename)); %make it if it doesent exist
+%     end
 
-        %status = mkdir(newfolder); 
-   % if status
-       % mkdir(fullfile(newfolder, Filename)); 
-    %end 
-    
-    if ~exist((Place2save + Filename), 'dir') %check if dir doesnt exist
-        mkdir(fullfile(newfolder, Filename)); %make it if it doesent exist
-    end
-
-save(fullfile(newfolder, 'params_stack_P'+ string(Particle_number)),'params_stack_P'+ string(Particle_number))
+%save(fullfile(newfolder, 'params_stack_P'+ string(Particle_number)),'params_stack_P'+ string(Particle_number))
 
 %% Plotting Peak shift, Intensity and FWHM as a function of time %%
 figure(3)

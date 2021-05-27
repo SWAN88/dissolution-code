@@ -1,11 +1,15 @@
 %% generate spectrum
-corrected = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
-corrected = (sum(corrected))';
+% bg_free = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
+% bg_free = (sum(bg_free))';
+
+% extract 20 pixels on x-axis
+bg_free = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-spec(bg_y_pixel-9:bg_y_pixel+10,:);
+bg_free = (sum(bg_free))';
 
 raw = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:);
 raw = sum(raw);
 
-[~,part_x_pixel] = find(img_z == max(max(img_z(:,100:end))));
+[~, part_x_pixel] = find(img_z == max(max(img_z(:,100:end))));
 part_x_pixel = part_x_pixel(1);
 pixels = 1:2048;
 
@@ -27,17 +31,17 @@ slope = 160.8;
 %intercept = 0.22;
 %slope = 200;
 
-wav = ((pixels+part_x_pixel)*intercept+slope)'; %I know I mixed up the names but it works
+wav = ((pixels+part_x_pixel)*intercept+slope)'; 
 ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
 
 %% Fit
 
 %find initial guesses
-[ymax, idx] =  max(corrected); %find height and position of peak
+[ymax, idx] =  max(bg_free); %find height and position of peak
 peakpos = ev(idx);
 
-if min(corrected) > 0
-    ymin = min(corrected);
+if min(bg_free) > 0
+    ymin = min(bg_free);
 else
     ymin = 0;
 end
@@ -52,35 +56,35 @@ fo.Robust = 'LAR';
 fo.MaxIter = 1e3;
 fo.Display = 'Off';
 
-lambda = 650;
+lambda = 670;
 fo.Exclude = ev > 1240 ./ lambda;
 
-c = fit(ev, corrected, ft, fo); %fit without filter
+c = fit(ev, bg_free, ft, fo); %fit without filter
 
 %filter
 %evmax = ev(idx);
 %filter = 2.5 - abs((ev - evmax)/0.2);
 %filter(filter > 1) = 1;
 %filter(filter < 0) = 0;
-%c = fit(ev,filter.*corrected,ft,fo); %fit with filter
+%c = fit(ev,filter.*bg_free,ft,fo); %fit with filter
 
-yy = c.y0+(2*c.A/pi).*(c.w./(4*(ev-c.x0).^2+c.w.^2)); %reconstruct
+lorentzian_fitting = c.y0+(2*c.A/pi).*(c.w./(4*(ev-c.x0).^2+c.w.^2)); %reconstruct
 
-maxfit = round(max(yy));
-maxspec = round(max(corrected));
+maxfit = round(max(lorentzian_fitting));
+maxspec = round(max(bg_free));
 Eres = round(1240/c.x0);
 FWHM = round(1240/(c.x0 - c.w/2) - 1240/(c.x0 + c.w/2));
-SNR = round(maxfit./std(corrected-yy));
+SNR = round(maxfit./std(bg_free-lorentzian_fitting));
 
 params = [maxfit, Eres, FWHM, SNR];
-spectrum = [wav, corrected, yy];
+spectrum = [wav, bg_free, lorentzian_fitting];
 
 %% plot
-if plot_data.Value ==1
+if plot_data.Value == 1
     f = figure;
-    %plot(wav, filter*max(yy)); hold on %check filter
+    %plot(wav, filter*max(lorentzian_fitting)); hold on %check filter
     
-    p = plot(wav,raw, wav, corrected, wav, yy);
+    p = plot(wav, raw, wav, bg_free, wav, lorentzian_fitting);
     p(1).Color = 'b'; p(1).LineWidth = 1;
     p(2).Color = 'r'; p(2).LineWidth = 1;
     p(3).Color = 'k'; p(3).LineWidth = 1;

@@ -1,12 +1,15 @@
 %% generate spectrum
-corrected = (spec(ak2-9:ak2+10,:)-1*spec(ak3-9:ak3+10,:))./1;
+% corrected = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
+% corrected = (sum(corrected))';
+
+corrected = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-spec(bg_y_pixel-9:bg_y_pixel+10,:);
 corrected = (sum(corrected))';
 
-raw = spec(ak2-9:ak2+10,:);
+raw = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:);
 raw = sum(raw);
 
-[~,xcc] = find(img_z == max(max(img_z(:,100:end))));
-xcc = xcc(1);
+[~,part_x_pixel] = find(img_z == max(max(img_z(:,100:end))));
+part_x_pixel = part_x_pixel(1);
 pixels = 1:2048;
 
 % enter params
@@ -27,7 +30,7 @@ slope = 160.8;
 %intercept = 0.22;
 %slope = 200;
 
-wav = ((pixels+xcc)*intercept+slope)'; %I know I mixed up the names but it works
+wav = ((pixels+part_x_pixel)*intercept+slope)'; 
 ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
 
 %% Fit
@@ -50,18 +53,10 @@ fo.Lower = [0.1*ymax, 0.1, 1, -ymax];
 fo.Upper = [2*ymax, 2, 3, ymax];
 fo.Robust = 'LAR';
 fo.MaxIter = 1e3;
-fo.Display = ''
+fo.Display = 'Off';
 
-lambda = 650;
+lambda = 670;
 fo.Exclude = ev > 1240 ./ lambda;
-
-%fo.Exclude = ev > 2.48; %cutoff ~500nm
-%fo.Exclude = ev > 2.066; %cutoff ~600nm
-%fo.Exclude = ev > 1.9076; %cutoff ~650nm
-%fo.Exclude = ev > 1.823; %cutoff ~680nm
-%fo.Exclude = ev > 1.771; %cutoff ~700nm
-%fo.Exclude = ev > 1.675; %cutoff ~740nm
-
 
 c = fit(ev, corrected, ft, fo); %fit without filter
 
@@ -84,11 +79,11 @@ params = [maxfit, Eres, FWHM, SNR];
 spectrum = [wav, corrected, yy];
 
 %% plot
-if plot_data.Value ==1
+if plot_data.Value == 1
     f = figure;
     %plot(wav, filter*max(yy)); hold on %check filter
     
-    p = plot(wav,raw, wav, corrected, wav, yy);
+    p = plot(wav, raw, wav, corrected, wav, yy);
     p(1).Color = 'b'; p(1).LineWidth = 1;
     p(2).Color = 'r'; p(2).LineWidth = 1;
     p(3).Color = 'k'; p(3).LineWidth = 1;

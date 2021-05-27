@@ -36,8 +36,8 @@ end
 
 function params = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plotdata, frame_number)
 % generate spectrum
-corrected = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
-corrected = (sum(corrected))';
+bg_free = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
+bg_free = (sum(bg_free))';
 
 raw = spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:);
 raw = sum(raw);
@@ -59,10 +59,10 @@ ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
 %% Fit
 
 %find initial guesses
-[ymax, idx] =  max(corrected); %find height and position of peak
+[ymax, idx] =  max(bg_free); %find height and position of peak
 peakpos = ev(idx);
-if min(corrected) > 0
-    ymin = min(corrected);
+if min(bg_free) > 0
+    ymin = min(bg_free);
 else
     ymin = 0;
 end
@@ -77,33 +77,33 @@ fo.MaxIter = 1e3;
 fo.Display = 'Off';
 
 % to exclude fitting points below lambda
-lambda = 650;
+lambda = 670;
 fo.Exclude = ev > 1240 ./ lambda;
 
-c = fit(ev, corrected, ft, fo); %fit without filter
+c = fit(ev, bg_free, ft, fo); %fit without filter
 
 %filter
 %evmax = ev(idx);
 %filter = 2.5 - abs((ev - evmax)/0.2);
 %filter(filter > 1) = 1;
 %filter(filter < 0) = 0;
-%c = fit(ev,filter.*corrected,ft,fo); %fit with filter
+%c = fit(ev,filter.*bg_free,ft,fo); %fit with filter
 
-yy = c.y0+(2*c.A/pi).*(c.w./(4*(ev-c.x0).^2+c.w.^2)); %reconstruct
+lorentzian_fitting = c.y0+(2*c.A/pi).*(c.w./(4*(ev-c.x0).^2+c.w.^2)); %reconstruct
 
-maxfit = round(max(yy));
-%maxspec = round(max(corrected));
+maxfit = round(max(lorentzian_fitting));
+%maxspec = round(max(bg_free));
 Eres = round((1240/c.x0),3);
 FWHM = round(1240/(c.x0 - c.w/2) - 1240/(c.x0 + c.w/2),3);
-SNR = round(maxfit./std(corrected-yy));
+SNR = round(maxfit./std(bg_free-lorentzian_fitting));
 
 
 params = [maxfit, Eres, FWHM, SNR];
-spectrum = [wav, corrected, yy];
+spectrum = [wav, bg_free, lorentzian_fitting];
 
 %% plot
 if plotdata == 1
-    p = plot(wav, raw, wav, corrected, wav, yy);
+    p = plot(wav, raw, wav, bg_free, wav, lorentzian_fitting);
     p(1).Color = 'b'; p(1).LineWidth = 1;
     p(2).Color = 'r'; p(2).LineWidth = 1;
     p(3).Color = 'k'; p(3).LineWidth = 1;
