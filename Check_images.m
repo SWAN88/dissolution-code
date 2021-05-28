@@ -3,11 +3,10 @@ rounded_part_y_pixel = part_y_pixel;
 
 %% GUI left bottom
 img_z = pos(part_y_pixel-9:part_y_pixel+10,:);
-subplot(3,2,5);
-imagesc(img_z);
+% subplot(3,2,5);
+% imagesc(img_z);
 
 %img_z = img_z == max(img_z(:));
-
 
 %% GUI right bottom
 

@@ -8,16 +8,17 @@ Frames = endframe;
 
 %path
 Origin = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\';
+%Place2save = fullfile(Place2Save, Power); 
 
-if ~exist(Origin + string(date), 'dir')
-   mkdir(Origin + string(date)); 
-   cd(fullfile(Origin + string(date)))
-   if ~exist(Origin + string(date) + string(Potential) + 'V', 'dir')
-      mkdir(Origin + string(date) + string(Potential) + 'V'); 
-   end
+if ~exist(Origin + string(date), 'dir') %check if dir doesnt exist
+   mkdir(Origin + string(date)); %make it if it doesent exist
+   
+    newfolder = fullfile(Place2save, Filename); 
+
+    if ~exist(Origin + string(date) + string(Potential) + 'V', 'dir')
+        mkdir(Origin + string(date) + string(Potential) + 'V'); 
+    end
 end
-
-% How can we create potential folder in date folder??
 
 %% Save param_stack  %%
 

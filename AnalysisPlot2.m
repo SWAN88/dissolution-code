@@ -2,9 +2,9 @@
 %clear
 
 %Parameters to be changed
-Total_particle = 3;
-Frames = 480;
-Potential = 0.27;
+Total_particle = count;
+Frames = endframe;
+Potential = 0.29;
 Power = 'High';
 Place2SAVE = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\210520';
 Place2Save = fullfile(Place2SAVE, Power); 
