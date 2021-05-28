@@ -1,10 +1,9 @@
-%partnum = str2num(get(findobj(gcf,'Tag','partnum'),'String')); 
-startframe = str2num(get(findobj(gcf,'Tag','sf'),'String')); %get the first frame
-endframe = str2num(get(findobj(gcf,'Tag','ef'),'String')); %get the last fram
+startframe = str2double(get(findobj(gcf,'Tag','sf'),'String')); %get the first frame
+endframe = str2double(get(findobj(gcf,'Tag','ef'),'String')); %get the last fram
 
 clear params_stack spectra_stack
 
-if plot_data.Value ==1
+if plot_data.Value == 1
     f = figure;
     set(gcf,'position',[100 100 1200 800])
 end
@@ -13,7 +12,7 @@ params_stack = NaN(endframe, 4);
 spectra_stack = NaN(2048,3,endframe);
 
 for frame_number = startframe:endframe
-    spec=imread(filename2, frame_number);
+    spec = imread(filename2, frame_number);
     
     params = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plot_data.Value, frame_number);
     params_stack(frame_number, :) = params;
@@ -47,20 +46,17 @@ part_x_pixel = part_x_pixel(1);
 pixels = 1:2048;
 
 % enter params
-% = 0.24;
-%slope = 100.8;
-
 intercept = 0.24;
 slope = 160.8;
 
-wav = ((pixels+part_x_pixel)*intercept+slope)';
-ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
-
+wav = ((pixels + part_x_pixel) * intercept + slope)';
+ev = 2 * pi * 3 * 1e8 ./ wav * 6.582 * 1e-16 * 1e9;
 %% Fit
 
 %find initial guesses
 [ymax, idx] =  max(bg_free); %find height and position of peak
 peakpos = ev(idx);
+
 if min(bg_free) > 0
     ymin = min(bg_free);
 else

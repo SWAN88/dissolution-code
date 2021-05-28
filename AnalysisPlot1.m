@@ -1,4 +1,4 @@
-%% Plotting LSPR position as a function of time %%
+%% Plotting LSPR position as a function of time
 
 Particle_number = part_num;
 date = get(findobj(gcf,'Tag','date'),'String');
@@ -6,40 +6,31 @@ Potential = str2double(get(findobj(gcf,'Tag','potential'),'String'));
 Power = get(findobj(gcf,'Tag','power'),'String');
 Frames = endframe;
 
-%path
+%Path
 Origin = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\';
 
+%Create today's folder
 if ~exist(Origin + string(date), 'dir')
    mkdir(Origin + string(date)); 
-   cd(fullfile(Origin + string(date)))
-   if ~exist(Origin + string(date) + string(Potential) + 'V', 'dir')
-      mkdir(Origin + string(date) + string(Potential) + 'V'); 
-   end
 end
 
-% How can we create potential folder in date folder??
+%Create each power folder
+cd(Origin + string(date));
+if ~exist(Origin + string(date) + string(Power), 'dir')
+  mkdir(string(Power)); 
+end
 
-%% Save param_stack  %%
+%Create each potential folder
+cd(string(Power));
+if ~exist(Origin + string(date) + string(Power) + string(Potential) + 'V', 'dir')
+  mkdir(string(Potential) + 'V'); 
+end
 
-% need to be chaged P*
-params_stack_P1 = params_stack;
-% clear('params_stack');
+%% Save each param_stack
 
-% Filename = string(Potential) + 'V';
-% newfolder = fullfile(Place2save, Filename); 
-% 
-%         %status = mkdir(newfolder); 
-%    % if status
-%        % mkdir(fullfile(newfolder, Filename)); 
-%     %end 
-%     
-%     if ~exist((Place2save + Filename), 'dir') %check if dir doesnt exist
-%         mkdir(fullfile(newfolder, Filename)); %make it if it doesent exist
-%     end
-
-%save(fullfile(newfolder, 'params_stack_P'+ string(Particle_number)),'params_stack_P'+ string(Particle_number))
-
-%% Plotting Peak shift, Intensity and FWHM as a function of time %%
+cd(string(Potential) + 'V');
+save('params_stack_P' + string(Particle_number), 'params_stack')
+%% Plotting Peak shift, Intensity and FWHM as a function of time
 figure(3)
 subplot(1,3,1)
 plot(1:Frames,params_stack(:,2) - params_stack(1,2));

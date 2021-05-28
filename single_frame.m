@@ -1,4 +1,6 @@
 %% generate spectrum
+
+% old code
 % bg_free = (spec(rounded_part_y_pixel-9:rounded_part_y_pixel+10,:)-1*spec(bg_y_pixel-9:bg_y_pixel+10,:))./1;
 % bg_free = (sum(bg_free))';
 
@@ -24,16 +26,15 @@ pixels = 1:2048;
 %intercept = 0.2355;
 %slope = 152.4747;
 
-intercept = 0.24;
-slope = 160.8;
-
 %July 14
 %intercept = 0.22;
 %slope = 200;
 
-wav = ((pixels+part_x_pixel)*intercept+slope)'; 
-ev = 2*pi*3*1e8./wav*6.582*1e-16*1e9;
+intercept = 0.24;
+slope = 160.8;
 
+wav = ((pixels + part_x_pixel) * intercept + slope)'; 
+ev = 2 * pi * 3 * 1e8 ./ wav * 6.582 * 1e-16 * 1e9;
 %% Fit
 
 %find initial guesses
@@ -99,4 +100,3 @@ if plot_data.Value == 1
     title(['Eres = ' num2str(Eres) ' nm Maxfit = ' num2str(maxfit)...
         ' FWHM = ' num2str(FWHM), ' nm SNR = ' num2str(SNR)])
 end
-

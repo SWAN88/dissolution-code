@@ -1,41 +1,39 @@
 %% Plotting LSPR position as a function of time %%
-%clear
 
-%Parameters to be changed
-Total_particle = count;
-Frames = endframe;
-Potential = 0.29;
-Power = 'High';
-Place2SAVE = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\210520';
-Place2Save = fullfile(Place2SAVE, Power); 
-Place2save = fullfile(Place2Save, string(Potential) + 'V'); 
+%Parameters
+Total_particle = part_num;
 
+filename = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\' + string(date) + '\' + string(Power) + '\' + string(Potential) + 'V';
+
+all_params = cell(1, Total_particle);
 for i = 1:Total_particle
-load(fullfile(Place2save, 'params_stack_P' + string(i) + '.mat'))
+all_params{1, i} = load(filename + '\params_stack_P' + string(i));
 end
-% need to be changed
-%cell = {params_stack_P1, params_stack_P2, params_stack_P3, params_stack_P4, params_stack_P5, params_stack_P6};
-cell = {params_stack_P1, params_stack_P2, params_stack_P3};
+
+Legend = cell(Total_particle,1);
+for i = 1:Total_particle
+Legend{i,1} = 'Particle ' + string(i);
+end
 
 figure(4)
 for i = 1:Total_particle
-plot(1:Frames,cell{1,i}(:,2) - cell{1,i}(1,2));
+plot(1:Frames,all_params{1,i}.params_stack(:,2) - all_params{1,i}.params_stack(1,2));
 hold on
 end
 hold off
 
 title('LSPR position over time at '+ string(Potential)+ 'V ' + Power)
-xlabel('time (s)')
-ylabel('Peak resonance Shift (nm)')
-%legend('P1','P2','P3','P4','P5','P6')
+xlabel('Time (s)')
+ylabel('Peak Resonance Shift (nm)')
+legend(Legend)
 
 set(gcf,'PaperPositionMode','auto');
-pic_path1 = strcat(Place2save, '/LSPR.png');
+pic_path1 = strcat(filename, '/LSPR.png');
 saveas(gcf, pic_path1)
 
 figure(5)
 for i = 1:Total_particle
-plot(1:Frames,cell{1,i}(:,1) .* 100 ./ max(cell{1,i}(:,1)) - cell{1,i}(1,1) .* 100 ./ max(cell{1,i}(:,1)) );
+plot(1:Frames,all_params{1,i}.params_stack(:,1) .* 100 ./ max(all_params{1,i}.params_stack(:,1)) - all_params{1,i}.params_stack(1,1) .* 100 ./ max(all_params{1,i}.params_stack(:,1)) );
 hold on
 end
 hold off
@@ -43,16 +41,15 @@ hold off
 title('Intensity over time at '+ string(Potential)+ 'V ' + Power)
 xlabel('time (s)')
 ylabel('Intensity decrease (%)')
-%legend('P1','P2','P3','P4')
-%legend('P1','P2','P3','P4','P5','P6')
+legend(Legend)
 
 set(gcf,'PaperPositionMode','auto');
-pic_path1 = strcat(Place2save, '/Intensity.png');
+pic_path1 = strcat(filename, '/Intensity.png');
 saveas(gcf, pic_path1)
 
 figure(6)
 for i = 1:Total_particle
-plot(1:Frames,cell{1,i}(:,3)  - cell{1,i}(1,3));
+plot(1:Frames, all_params{1,i}.params_stack(:,3)  - all_params{1,i}.params_stack(1,3));
 hold on
 end
 hold off
@@ -60,8 +57,8 @@ hold off
 title('FWHM over time at '+ string(Potential)+ 'V ' + Power)
 xlabel('time (s)')
 ylabel('FWHM change (nm)')
-%legend('P1','P2','P3','P4')
-%legend('P1','P2','P3','P4','P5','P6')
+legend(Legend)
+
 set(gcf,'PaperPositionMode','auto');
-pic_path1 = strcat(Place2save, '/FWHM.png');
+pic_path1 = strcat(filename, '/FWHM.png');
 saveas(gcf, pic_path1)
