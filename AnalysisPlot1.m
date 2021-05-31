@@ -1,34 +1,11 @@
 %% Plotting LSPR position as a function of time
 
 Particle_number = part_num;
-date = get(findobj(gcf,'Tag','date'),'String');
-Potential = str2double(get(findobj(gcf,'Tag','potential'),'String'));
-Power = get(findobj(gcf,'Tag','power'),'String');
 Frames = endframe;
-
-%Path
-Origin = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\';
-
-%Create today's folder
-if ~exist(Origin + string(date), 'dir')
-   mkdir(Origin + string(date)); 
-end
-
-%Create each power folder
-cd(Origin + string(date));
-if ~exist(Origin + string(date) + string(Power), 'dir')
-  mkdir(string(Power)); 
-end
-
-%Create each potential folder
-cd(string(Power));
-if ~exist(Origin + string(date) + string(Power) + string(Potential) + 'V', 'dir')
-  mkdir(string(Potential) + 'V'); 
-end
 
 %% Save each param_stack
 
-cd(string(Potential) + 'V');
+cd(filepath);
 save('params_stack_P' + string(Particle_number), 'params_stack')
 %% Plotting Peak shift, Intensity and FWHM as a function of time
 figure(3)
@@ -64,3 +41,6 @@ ylabel('FWHM change (nm)')
 % set(gcf,'PaperPositionMode','auto');
 % pic_path2 = strcat(Place2save, string(Potential) + 'V_P' + Particle_number + Power +'.png');
 % saveas(gcf, pic_path2)
+
+% Go back to analysis code folder path
+cd('U:\dissolution-code');

@@ -3,7 +3,7 @@
 %Parameters
 Total_particle = part_num;
 
-filename = 'C:\Users\ks77\Documents\MATLAB\Dissolution Project\' + string(date) + '\' + string(Power) + '\' + string(Potential) + 'V';
+filename = filepath1 + string(date) + '\' + string(Power) + '\' + string(Potential) + 'V';
 
 all_params = cell(1, Total_particle);
 for i = 1:Total_particle
