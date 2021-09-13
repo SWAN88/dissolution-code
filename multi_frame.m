@@ -48,9 +48,9 @@ for frame_number = startframe:endframe
     spec = imread(filename2, frame_number);
     
     % function defined in stackfit.m 
-    params = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plot_data.Value, frame_number);
+    [params, spectra] = stackfit(rounded_part_y_pixel, bg_y_pixel, spec, img_z, plot_data.Value, frame_number);
     params_stack(frame_number, :) = params;
-    %spectra_stack(:, :, frame_number) = spectra;
+    spectra_stack(:, :, frame_number) = spectra;
     
     % Save Figure
     if save_figure.Value == 1
